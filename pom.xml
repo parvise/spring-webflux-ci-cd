@@ -120,6 +120,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>spring-webflux-ci-cd</finalName>
 	</build>
 
 </project>
