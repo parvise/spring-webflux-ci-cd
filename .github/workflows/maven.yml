@@ -43,7 +43,7 @@ jobs:
 
     steps:
       - name: Pull Docker image
-        run: docker pull ${{ secrets.DOCKER_USERNAME }}/deploy-ec2
+        run: docker pull ${{ secrets.DOCKER_USERNAME }}/deploy-ec2:latest
 
       - name: Stop existing container (if running)
         run: |
@@ -55,6 +55,10 @@ jobs:
         run: |
           docker rm -f deploy-ec2 || true
           docker run -d -p 9090:9090 --name deploy-ec2 ${{ secrets.DOCKER_USERNAME }}/deploy-ec2
+      - name: Allow PowerShell scripts
+        run: Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
+        shell: powershell
+
 
 #  deploy:
 #    runs-on: [ubuntu-latest]
