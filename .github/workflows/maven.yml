@@ -63,12 +63,14 @@ jobs:
         run:  docker ps -q --filter "name=deploy-ec2" | ForEach-Object { docker stop $_; docker rm $_ }
 
 
-      #      - name: Restart container
-#        run: |
-#          docker rm -f deploy-ec2 -ErrorAction SilentlyContinue
-#          docker run -d -p 9090:9090 --name deploy-ec2 ${{ secrets.DOCKER_USERNAME }}/deploy-ec2
+      - name: Restart container/Remove old container
+        run:
+          docker rm -f deploy-ec2 -ErrorAction SilentlyContinue
+        shell: powershell
+
       - name: Run Docker container on port 9090
         run: docker run -d -p 9090:9090 --name deploy-ec2 ${{ secrets.DOCKER_USERNAME }}/deploy-ec2
+
       - name: Allow PowerShell scripts
         run: Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
         shell: powershell
