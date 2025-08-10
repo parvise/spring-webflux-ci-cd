@@ -37,5 +37,34 @@ jobs:
     - name: Push Docker image to Docker Hub
       run: docker push parvise/deploy-ec2:latest
 
+  deploy-local:
+    needs: build-test-push
+    runs-on: self-hosted  # This will run on your Windows machine
+
+    steps:
+      - name: Pull Docker image
+        run: docker pull ${{ secrets.DOCKER_USERNAME }}/deploy-ec2
+
+      - name: Stop existing container (if running)
+        run: |
+          docker ps -q --filter "name=deploy-ec2" | ForEach-Object { docker stop $_; docker rm $_ }
+
+      - name: Run Docker container on port 9090
+        run: docker run -d -p 9090:9090 --name deploy-ec2 ${{ secrets.DOCKER_USERNAME }}/deploy-ec2
+      - name: Restart container
+        run: |
+          docker rm -f deploy-ec2 || true
+          docker run -d -p 9090:9090 --name deploy-ec2 ${{ secrets.DOCKER_USERNAME }}/deploy-ec2
+
+#  deploy:
+#    runs-on: [ubuntu-latest]
+#    needs: build
+#    steps:
+#    - name: pull image from Docker Hub
+#      run: docker pull parvise/deploy-ec2:latest
+#    - name: Delete old container if exists
+#      run: docker stop deploy-ec2 || true && docker rm deploy-ec2 || true
+#    - name: Run new container
+#      run: docker run -d --name deploy-ec2-container parvise/deploy-ec2 -p 80:808
 
 
