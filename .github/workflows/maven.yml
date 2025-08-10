@@ -45,11 +45,12 @@ jobs:
       - name: Pull Docker image
         run: docker pull ${{ secrets.DOCKER_USERNAME }}/deploy-ec2:latest
 
-      - name: Stop existing container (if running)
-        run: |
-          docker stop deploy-ec2 || true && docker rm deploy-ec2 || true
+      - name: Stop & remove container
+        run: docker stop deploy-ec2 || true && docker rm deploy-ec2 || true
+        shell: bash
 
-#      - name: Restart container
+
+      #      - name: Restart container
 #        run: |
 #          docker rm -f deploy-ec2 -ErrorAction SilentlyContinue
 #          docker run -d -p 9090:9090 --name deploy-ec2 ${{ secrets.DOCKER_USERNAME }}/deploy-ec2
