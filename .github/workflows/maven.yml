@@ -47,7 +47,6 @@ jobs:
 
       - name: Stop existing container (if running)
         run: |
-          docker ps -q --filter "name=deploy-ec2" | ForEach-Object { docker stop $_; docker rm $_ }
           docker stop deploy-ec2 || true && docker rm deploy-ec2 || true
 
 #      - name: Restart container
