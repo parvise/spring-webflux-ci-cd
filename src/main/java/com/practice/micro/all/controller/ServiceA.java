@@ -20,7 +20,7 @@ public class ServiceA {
     @Autowired
     public RestTemplate restTemplate;
 
-    private String url="http://localhost:8080/api/v1/serviceB/{request}";
+    private String url="http://localhost:9090/api/v1/serviceB/{request}";
 
     @GetMapping("/serviceA/callB")
     public String getServiceA() {

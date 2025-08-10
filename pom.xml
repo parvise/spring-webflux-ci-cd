@@ -11,7 +11,7 @@
 	<groupId>com.practice.micro</groupId>
 	<artifactId>all-micro-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>all-micro-service</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
@@ -120,6 +120,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>spring-webflux-ci-cd</finalName>
 	</build>
 
 </project>
