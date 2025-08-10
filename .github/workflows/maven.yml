@@ -37,8 +37,8 @@ jobs:
     - name: Push Docker image to Docker Hub
       run: docker push parvise/deploy-ec2:latest
 
-  deploy-local:
-    needs: build-test-push
+  deploy:
+    needs: build
     runs-on: self-hosted  # This will run on your Windows machine
 
     steps:
