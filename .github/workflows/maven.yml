@@ -53,7 +53,7 @@ jobs:
         run: docker run -d -p 9090:9090 --name deploy-ec2 ${{ secrets.DOCKER_USERNAME }}/deploy-ec2
       - name: Restart container
         run: |
-          docker rm -f deploy-ec2 || true
+          docker rm -f deploy-ec2 -ErrorAction SilentlyContinue
           docker run -d -p 9090:9090 --name deploy-ec2 ${{ secrets.DOCKER_USERNAME }}/deploy-ec2
       - name: Allow PowerShell scripts
         run: Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
