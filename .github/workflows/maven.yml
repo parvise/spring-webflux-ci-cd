@@ -63,13 +63,16 @@ jobs:
       # Stop & remove old container on Windows
       - name: Stop old container (Windows)
         if: runner.os == 'Windows'
-        run: docker stop deploy-ec2 -ErrorAction SilentlyContinue
         shell: powershell
+        run: |
+          try { docker stop deploy-ec2 } catch {}
 
       - name: Remove old container (Windows)
         if: runner.os == 'Windows'
-        run: docker rm deploy-ec2 -ErrorAction SilentlyContinue
         shell: powershell
+        run: |
+          try { docker rm deploy-ec2 } catch {}
+      
 
       # Stop & remove old container on Linux
       - name: Stop & remove old container (Linux)
