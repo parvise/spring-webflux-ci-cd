@@ -46,7 +46,7 @@ public class ServiceC {
     @GetMapping(value="/dummyData",produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<String> getDummyData(){
         // https://jsonplaceholder.typicode.com/users
-        String url="http://localhost:8080/api/v1";
+        String url="http://localhost:9090/api/v1";
         WebClient webClient = WebClient.builder()
                 .baseUrl(url)
                 .build();
