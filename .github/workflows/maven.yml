@@ -48,20 +48,17 @@ jobs:
       - name: Stop existing container (if running)
         run: |
           docker ps -q --filter "name=deploy-ec2" | ForEach-Object { docker stop $_; docker rm $_ }
+          docker stop deploy-ec2 || true && docker rm deploy-ec2 || true
 
-      - name: Restart container
-        run: |
-          docker rm -f deploy-ec2 -ErrorAction SilentlyContinue
-          docker run -d -p 9090:9090 --name deploy-ec2 ${{ secrets.DOCKER_USERNAME }}/deploy-ec2
+#      - name: Restart container
+#        run: |
+#          docker rm -f deploy-ec2 -ErrorAction SilentlyContinue
+#          docker run -d -p 9090:9090 --name deploy-ec2 ${{ secrets.DOCKER_USERNAME }}/deploy-ec2
       - name: Run Docker container on port 9090
         run: docker run -d -p 9090:9090 --name deploy-ec2 ${{ secrets.DOCKER_USERNAME }}/deploy-ec2
       - name: Allow PowerShell scripts
         run: Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
         shell: powershell
-
-      - name: Remove old container
-        run: docker rm -f deploy-ec2 || true
-        shell: bash
 
 #  deploy:
 #    runs-on: [ubuntu-latest]
