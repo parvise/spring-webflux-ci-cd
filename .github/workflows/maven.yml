@@ -56,20 +56,56 @@ jobs:
     runs-on: self-hosted  # This will run on your Windows machine
 
     steps:
-      - name: Pull Docker image
-        run: docker pull ${{ secrets.DOCKER_USERNAME }}/deploy-ec2:latest
+      # Linux-compatible stop/remove
+      - name: Stop & remove old container (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          docker stop deploy-ec2 || true
+          docker rm deploy-ec2 || true
 
-      - name: Stop existing container (if running)
-        run:  docker ps -q --filter "name=deploy-ec2" | ForEach-Object { docker stop $_; docker rm $_ }
-
-
-      - name: Restart container/Remove old container
-        run:
-          docker rm -f deploy-ec2 -ErrorAction SilentlyContinue
+      # Windows-compatible stop/remove
+      - name: Stop old container (Windows)
+        if: runner.os == 'Windows'
+        run: docker stop deploy-ec2 -ErrorAction SilentlyContinue
         shell: powershell
 
-      - name: Run Docker container on port 9090
-        run: docker run -d -p 9090:9090 --name deploy-ec2 ${{ secrets.DOCKER_USERNAME }}/deploy-ec2
+      - name: Remove old container (Windows)
+        if: runner.os == 'Windows'
+        run: docker rm deploy-ec2 -ErrorAction SilentlyContinue
+        shell: powershell
+
+      # Pull latest image
+      - name: Pull latest image
+        run: docker pull ${{ secrets.DOCKER_USERNAME }}/deploy-ec2:latest
+        shell: bash
+
+      # Run container on Linux
+      - name: Run new container (Linux)
+        if: runner.os == 'Linux'
+        run: docker run -d -p 9090:9090 --name deploy-ec2 ${{ secrets.DOCKER_USERNAME }}/deploy-ec2:latest
+
+      # Run container on Windows
+      - name: Run new container (Windows)
+        if: runner.os == 'Windows'
+        run: docker run -d -p 9090:9090 --name deploy-ec2 ${{ secrets.DOCKER_USERNAME }}/deploy-ec2:latest
+        shell: powershell
+#      Why this works
+#
+#
+#      - name: Pull Docker image
+#        run: docker pull ${{ secrets.DOCKER_USERNAME }}/deploy-ec2:latest
+#
+#      - name: Stop existing container (if running)
+#        run:  docker ps -q --filter "name=deploy-ec2" | ForEach-Object { docker stop $_; docker rm $_ }
+#
+#
+#      - name: Restart container/Remove old container
+#        run:
+#          docker rm -f deploy-ec2 -ErrorAction SilentlyContinue
+#        shell: powershell
+#
+#      - name: Run Docker container on port 9090
+#        run: docker run -d -p 9090:9090 --name deploy-ec2 ${{ secrets.DOCKER_USERNAME }}/deploy-ec2
 
       - name: Allow PowerShell scripts
         run: Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
