@@ -1,0 +1,27 @@
+resilience4j:
+  circuitbreaker:
+    instances:
+      paymentService:
+        slidingWindowSize: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+  retry:
+    instances:
+      paymentService:
+        maxAttempts: 3
+        waitDuration: 2s
+  ratelimiter:
+    instances:
+      paymentService:
+        limitForPeriod: 2
+        limitRefreshPeriod: 10s
+        timeoutDuration: 0
+  timelimiter:
+    instances:
+      paymentService:
+        timeoutDuration: 2s
+  bulkhead:
+    instances:
+      paymentService:
+        maxConcurrentCalls: 2
+        maxWaitDuration: 0
