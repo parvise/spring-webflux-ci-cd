@@ -95,3 +95,32 @@ jobs:
       - name: Run new container (Linux)
         if: runner.os == 'Linux'
         run: docker run -d -p 9090:9090 --name deploy-ec2 ${{ secrets.DOCKER_USERNAME }}/deploy-ec2:latest
+
+#
+#  - name: Upload WAR as artifact (optional)
+#      uses: actions/upload-artifact@v4
+#      with:
+#        name: app-war
+#        path: target/*.war
+#
+#      - name: Copy WAR to WebLogic server
+#        uses: appleboy/scp-action@v0.1.7
+#        with:
+#          host: ${{ secrets.SERVER_IP }}
+#          username: ${{ secrets.SERVER_USER }}
+#          key: ${{ secrets.SSH_PRIVATE_KEY }}
+#          source: "target/*.war"
+#          target: "${{ secrets.WLS_DOMAIN_PATH }}/autodeploy"
+#
+#      - name: Restart WebLogic
+#        uses: appleboy/ssh-action@v1.1.0
+#        with:
+#          host: ${{ secrets.SERVER_IP }}
+#          username: ${{ secrets.SERVER_USER }}
+#          key: ${{ secrets.SSH_PRIVATE_KEY }}   Your private SSH key (from ~/.ssh/id_rsa)
+#          script: |
+#            echo "Stopping WebLogic..."
+#            ${WLS_DOMAIN_PATH}/bin/stopWebLogic.sh  WebLogic domain path (e.g., /opt/weblogic/user_projects/domains/mydomain)
+#            sleep 10
+#            echo "Starting WebLogic..."
+#            ${WLS_DOMAIN_PATH}/bin/startWebLogic.sh &
